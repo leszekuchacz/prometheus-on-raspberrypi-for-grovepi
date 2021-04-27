@@ -1,0 +1,13 @@
+grovepi_exporter_port=8081
+
+grovepi_dht_dport=7
+grovepi_dht_type=0
+
+grovepi_hcho_aport=0
+grovepi_hcho_r0=25
+
+grovepi_sound_aport=1
+
+grovepi_light_aport=2
+
+grovepi_rgb_lcd=true

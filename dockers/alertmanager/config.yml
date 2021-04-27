@@ -1,0 +1,11 @@
+route:
+  receiver: "grovepi_receiver"
+  group_wait:      60s
+  group_interval:  60s
+  repeat_interval: 24h
+receivers:
+  - name: "grovepi_receiver" 
+    webhook_configs:
+    - url: "http://grovepi_receiver:8082/webhook"
+      send_resolved: true
+

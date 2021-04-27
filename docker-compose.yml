@@ -1,0 +1,110 @@
+version: '3.0'
+
+volumes:
+  vol_prometheus: {}
+  vol_grafana: {}
+
+services:
+  grovepi_exporter:
+    env_file: envs/grovepi
+    container_name: grovepi_exporter
+    privileged: true
+    stdin_open: true
+    tty: true
+    ports:
+      - "8081:8081"
+    command: "python /code/collector.py"
+    build:
+      context: ./dockers/grovepi_exporter/
+      dockerfile: ./Dockerfile
+    image: grovepi_exporter:latest
+    volumes:
+        - /dev/i2c-1:/dev/i2c-1
+        - ./dockers/grovepi_exporter/code:/code
+    devices:
+        - /dev/i2c-1:/dev/i2c-1
+    depends_on:
+      - prometheus
+
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:v1.1.2
+    container_name: node_exporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    restart: unless-stopped
+    ports: 
+      - "9100:9100"
+    depends_on:
+      - prometheus
+
+  grovepi_receiver:
+    image: grovepi_receiver:latest
+    build:
+      context: ./dockers/grovepi_receiver/
+      dockerfile: ./Dockerfile
+    env_file: 
+      - envs/global
+      - envs/grovepi
+    container_name: grovepi_receiver 
+    privileged: true
+    stdin_open: true
+    tty: true
+    ports:
+      - "8082:8082"
+    command: "python /code/app.py"
+    volumes:
+        - /dev/i2c-1:/dev/i2c-1
+        - ./dockers/grovepi_receiver/code:/code
+    devices:
+        - /dev/i2c-1:/dev/i2c-1
+    depends_on:
+      - alertmanager
+  
+  alertmanager:
+    image: prom/alertmanager:v0.21.0
+    container_name: alertmanager
+    env_file: 
+      - envs/global
+    ports: 
+      - "9093:9093"
+    volumes:
+      - ./dockers/alertmanager:/etc/alertmanager/
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+    depends_on:
+      - prometheus
+
+  prometheus:
+    image: prom/prometheus:v2.26.0
+    env_file: 
+      - envs/global
+    volumes:
+      - ./dockers/prometheus:/etc/prometheus/
+      - vol_prometheus:/data
+    ports:
+      - "9090:9090"
+    command:
+      - '--storage.tsdb.path=/data'
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      #- '--enable-feature=expand-external-labels'
+
+  grafana:
+    image: grafana/grafana:7.5.4
+    env_file: 
+      - envs/global
+    volumes:
+      - vol_grafana:/var/lib/grafana
+      - ./dockers/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./dockers/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
