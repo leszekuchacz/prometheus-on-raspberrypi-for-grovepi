@@ -83,6 +83,8 @@ services:
 
   prometheus:
     image: prom/prometheus:v2.26.0
+    container_name: prometheus
+    user: root
     env_file: 
       - envs/global
     volumes:
@@ -97,6 +99,7 @@ services:
 
   grafana:
     image: grafana/grafana:7.5.4
+    container_name: grafana
     env_file: 
       - envs/global
     volumes:
