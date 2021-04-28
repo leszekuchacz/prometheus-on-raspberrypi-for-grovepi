@@ -1,10 +1,22 @@
 from grove_rgb_lcd import *
 from wsgiref.simple_server import make_server
-import falcon
-import json 
-import os
+import falcon,json,os,time,grovepi
 
 grovepi_rgb_lcd=os.environ.get('grovepi_rgb_lcd','false')
+grovepi_buzzer_dport=int(os.environ.get('grovepi_buzzer_dport','-1'))
+
+# buzzer
+def buzzer(t: float):
+  try:  
+    grovepi.pinMode(grovepi_buzzer_dport,"OUTPUT")
+    grovepi.digitalWrite(grovepi_buzzer_dport,1)
+    time.sleep(t)
+    grovepi.digitalWrite(grovepi_buzzer_dport,0)
+  except:
+    print('Oh crap')
+    time.sleep(0.2)
+    grovepi.digitalWrite(grovepi_buzzer_dport,0)
+    
 
 # Rgb_lcd
 def rgb_lcd_clear():
@@ -35,6 +47,8 @@ class WebhookResource:
       print("  alert_status: "+a['status']+" alertname: "+a['labels']['alertname']+" severity: "+a['labels']['severity']+" desc: "+a['annotations']['description'])
 
       output=a['labels']['severity']+": "+a['labels']['alertname']
+      if grovepi_buzzer_dport >= 0:
+        buzzer(0.1)  
       if grovepi_rgb_lcd == "true":
         rgb_lcd_notify(output,a['labels']['severity'])
     resp.status = falcon.HTTP_200
