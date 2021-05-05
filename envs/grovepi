@@ -13,3 +13,6 @@ grovepi_light_aport=2
 grovepi_rgb_lcd=true
 
 grovepi_buzzer_dport=8
+
+grovepi_barometer_type=bme280
+

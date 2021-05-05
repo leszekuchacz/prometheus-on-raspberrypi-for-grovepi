@@ -1,7 +1,4 @@
-import time
-import os
-import grovepi
-import math
+import time, os, grovepi, math, smbus2, bme280
 from prometheus_client.core import GaugeMetricFamily, REGISTRY, CounterMetricFamily
 from prometheus_client import start_http_server
 
@@ -14,7 +11,7 @@ grovepi_hcho_aport=int(os.environ.get('grovepi_hcho_aport','-1'))
 grovepi_hcho_r0=int(os.environ.get('grovepi_hcho_r0','25'))
 grovepi_sound_aport=int(os.environ.get('grovepi_sound_aport','-1'))
 grovepi_light_aport=int(os.environ.get('grovepi_light_aport','-1'))
-grovepi_light_aport=int(os.environ.get('grovepi_light_aport','-1'))
+grovepi_barometer_type=str(os.environ.get('grovepi_barometer_type',''))
 
 class CustomCollector(object):
   def __init__(self):
@@ -43,6 +40,15 @@ class CustomCollector(object):
       yield GaugeMetricFamily("grovepi_sound", 'dB', grovepi.analogRead(grovepi_sound_aport))
     if grovepi_light_aport >= 0:
       yield GaugeMetricFamily("grovepi_light", 'lumen', grovepi.analogRead(grovepi_light_aport))
+    if grovepi_barometer_type == "bme280":
+      i2c_address=0x76
+      bus=smbus2.SMBus(1) # Grove hat rev1 = 1
+      calibration_params = bme280.load_calibration_params(bus, i2c_address)
+      data = bme280.sample(bus, i2c_address, calibration_params)
+      yield GaugeMetricFamily("grovepi_barometer_temperature", '°C', value=data.temperature)
+      yield GaugeMetricFamily("grovepi_barometer_humidity", 'rH', value=data.humidity)
+      yield GaugeMetricFamily("grovepi_barometer_pressure", 'hPa', value=data.pressure)
+       
       
       
 if __name__ == '__main__':
