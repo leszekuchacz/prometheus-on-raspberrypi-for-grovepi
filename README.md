@@ -14,7 +14,23 @@ A stack of monitoring solutions for Raspberrypi orchestrated by `docker-compose`
 # Install(fast and default)
 1. You  need to install raspbian 10 for architecture **arm64** on  your raspberry pi. [raspbian 10 arm64](https://downloads.raspberrypi.org/raspios_arm64/images/). You can base on this instruction [www.raspberrypi.org](https://www.raspberrypi.org/documentation/installation/installing-images/)
 
-2. Login on root, run bellow command and reboot.
+2. Connect hat and sensors to rasberrypi.
+
+
+| Name           | SKU       |Link                                                          | Cost| Port to Connect |
+|----------------|-----------|--------------------------------------------------------------|-----|-----------------|
+| Grove Base Hat | 103030275 |https://wiki.seeedstudio.com/Grove_Base_Hat_for_Raspberry_Pi/ | $11 | gpio on rasp    |
+| dht11 sensor| 101020011 |https://wiki.seeedstudio.com/Grove-TemperatureAndHumidity_Sensor/ | $6.50 | D7 |
+| hcho sensor | 101020001 WSP2110 | https://wiki.seeedstudio.com/Grove-HCHO_Sensor/ | $16.50 | A0 |
+| light sensor | 101020132  LS06-S  phototransistor| https://seeeddoc.github.io/Grove-Light_Sensor_v1.2/ | $3.20 | D2|
+| lcd rgb backlight| 104030001 6X2 LCD RGB| https://wiki.seeedstudio.com/Grove-LCD_RGB_Backlight/| $13.10 | i2c-1 |
+| buzzer | 107020000 Piezo Buzzer/Active Buzzer | https://wiki.seeedstudio.com/Grove-Buzzer/ | $2.10 | D8 |
+| barometer | 101020193 bme280 | https://wiki.seeedstudio.com/Grove-Barometer_Sensor-BME280/ | $18.70 |i2c-3 |
+| led red | 104030005 | https://wiki.seeedstudio.com/Grove-Red_LED/ | $2.10 | D5 |
+
+![Host](https://raw.githubusercontent.com/leszekuchacz/prometheus-on-raspberrypi-for-grovepi/develop/docs/connections.jpg)
+
+3. Login on root, run bellow command and reboot.
 ```
 su
 apt-get update && sudo apt-get upgrade
@@ -35,14 +51,14 @@ curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o 
   reboot
   
 ```
-3. After reboot we're ready to run this stack.
+4. After reboot we're ready to run this stack.
 ```
 git clone git@github.com:leszekuchacz/prometheus-on-raspberrypi-for-grovepi.git
 cd prometheus-on-raspberrypi-for-grovepi
 docker-compose build
 docker-composer up -d
 ```
-4. After get status 'done' for all containers, you can try check default endpoint:
+5. After get status 'done' for all containers, you can try check default endpoint:
 
 
 |  Address              | container_name  |

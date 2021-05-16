@@ -11,3 +11,9 @@ grovepi_sound_aport=1
 grovepi_light_aport=2
 
 grovepi_rgb_lcd=true
+
+grovepi_buzzer_dport=8
+
+grovepi_barometer_type=bme280
+
+grovepi_led_red_dport=5
