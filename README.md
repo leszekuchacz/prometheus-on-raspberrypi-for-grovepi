@@ -19,7 +19,7 @@ A stack of monitoring solutions for Raspberrypi orchestrated by `docker-compose`
 
 | Name           | SKU       |Link                                                          | Cost| Port to Connect |
 |----------------|-----------|--------------------------------------------------------------|-----|-----------------|
-| Grove Base Hat | 103030275 |https://wiki.seeedstudio.com/Grove_Base_Hat_for_Raspberry_Pi/ | $11 | gpio on rasp    |
+| GrovePi+  | 103010002 | https://wiki.seeedstudio.com/GrovePi_Plus/ | $35 | add-on board with 15 Grove 4-pin interfaces that brings Grove sensors |
 | dht11 sensor| 101020011 |https://wiki.seeedstudio.com/Grove-TemperatureAndHumidity_Sensor/ | $6.50 | D7 |
 | hcho sensor | 101020001 WSP2110 | https://wiki.seeedstudio.com/Grove-HCHO_Sensor/ | $16.50 | A0 |
 | light sensor | 101020132  LS06-S  phototransistor| https://seeeddoc.github.io/Grove-Light_Sensor_v1.2/ | $3.20 | D2|
