@@ -28,6 +28,8 @@ A stack of monitoring solutions for Raspberrypi orchestrated by `docker-compose`
 | barometer | 101020193 bme280 | https://wiki.seeedstudio.com/Grove-Barometer_Sensor-BME280/ | $18.70 |i2c-3 |
 | led red | 104030005 | https://wiki.seeedstudio.com/Grove-Red_LED/ | $2.10 | D5 |
 
+![Host](https://raw.githubusercontent.com/leszekuchacz/prometheus-on-raspberrypi-for-grovepi/develop/docs/connections.jpg)
+
 3. Login on root, run bellow command and reboot.
 ```
 su
