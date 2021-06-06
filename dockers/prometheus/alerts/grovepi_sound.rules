@@ -1,0 +1,17 @@
+groups:
+  - name: grovepi_sound_sensor
+    rules:
+    - alert: loudless_max_warn
+      expr: grovepi_sound  >  alert_loudless_max_warning
+      for: 15m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Loudless is over {{  $labels.alert_loudless_max_warning }}"
+    - alert: loudless_max_firing
+      expr: grovepi_sound > alert_loudless_max_firing
+      for: 5m
+      labels:
+        severity: firing
+      annotations:
+        summary: "Loudless is over {{  $labels.alert_loudless_max_firing }}"

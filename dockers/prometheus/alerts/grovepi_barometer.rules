@@ -1,8 +1,8 @@
 groups:
-  - name: grovepi_dht_sensor
+  - name: grovepi_barometer_sensor
     rules:
     - alert: temperature_max_warn
-      expr: grovepi_dht_temperature  >  alert_temperature_max_warning
+      expr: grovepi_barometer_temperature  >  alert_temperature_max_warning
       for: 15m
       labels:
         severity: warning
@@ -10,7 +10,7 @@ groups:
         summary: "Temperature is over {{  $labels.alert_temperature_max_warning }} C"
         description: "Open window"
     - alert: temperature_max_firing
-      expr: grovepi_dht_temperature > alert_temperature_max_firing
+      expr: grovepi_barometer_temperature > alert_temperature_max_firing
       for: 5m
       labels:
         severity: firing
@@ -18,14 +18,14 @@ groups:
         summary: "Temperature is over {{  $labels.alert_temperature_max_firing }} C"
         description: "Turn on the air conditioning"
     - alert: temperature_min_warn
-      expr: grovepi_dht_temperature  <  alert_temperature_min_warning
+      expr: grovepi_barometer_temperature  <  alert_temperature_min_warning
       for: 15m
       labels:
         severity: warning
       annotations:
         summary: "Temperature is above {{  $labels.alert_temperature_min_warning }} C"
     - alert: temperature_min_firing
-      expr: grovepi_dht_temperature < alert_temperature_min_firing
+      expr: grovepi_barometer_temperature < alert_temperature_min_firing
       for: 5m
       labels:
         severity: firing
@@ -33,31 +33,59 @@ groups:
         summary: "Temperature is above {{  $labels.alert_temperature_min_firing }} C"
     
     - alert: humidity_max_warn
-      expr: grovepi_dht_humidity  >  alert_humidity_max_warning
+      expr: grovepi_barometer_humidity  >  alert_humidity_max_warning
       for: 15m
       labels:
         severity: warning
       annotations:
         summary: "Humidity is over {{  $labels.alert_humidity_max_warning }}"
     - alert: humidity_max_firing
-      expr: grovepi_dht_humidity > alert_humidity_max_firing
+      expr: grovepi_barometer_humidity > alert_humidity_max_firing
       for: 5m
       labels:
         severity: firing
       annotations:
         summary: "Humidity is over {{  $labels.alert_humidity_max_firing }}"
-
     - alert: humidity_min_warn
-      expr: grovepi_dht_humidity  <  alert_humidity_min_warning
+      expr: grovepi_barometer_humidity  <  alert_humidity_min_warning
       for: 15m
       labels:
         severity: warning
       annotations:
         summary: "Humidity is above {{  $labels.alert_humidity_min_warning }}"
     - alert: humidity_min_firing
-      expr: grovepi_dht_humidity < alert_humidity_min_firing
+      expr: grovepi_barometer_humidity < alert_humidity_min_firing
       for: 5m
       labels:
         severity: firing
       annotations:
         summary: "Humidity is above {{  $labels.alert_humidity_min_firing }}"
+
+    - alert: pressure_max_warn
+      expr: grovepi_barometer_pressure  >  alert_pressure_max_warning
+      for: 15m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Pressure is over {{  $labels.alert_pressure_max_warning }}"
+    - alert: pressure_max_firing
+      expr: grovepi_barometer_pressure > alert_pressure_max_firing
+      for: 5m
+      labels:
+        severity: firing
+      annotations:
+        summary: "Pressure is over {{  $labels.alert_pressure_max_firing }}"
+    - alert: pressure_min_warn
+      expr: grovepi_barometer_pressure  <  alert_pressure_min_warning
+      for: 15m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Pressure is above {{  $labels.alert_pressure_min_warning }}"
+    - alert: pressure_min_firing
+      expr: grovepi_barometer_pressure < alert_pressure_min_firing
+      for: 5m
+      labels:
+        severity: firing
+      annotations:
+        summary: "Pressure is above {{  $labels.alert_pressure_min_firing }}"

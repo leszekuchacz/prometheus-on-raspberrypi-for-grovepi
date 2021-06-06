@@ -1,0 +1,16 @@
+alert_temperature_max_warning=26
+alert_temperature_max_firing=32
+alert_temperature_min_warning=18
+alert_temperature_min_firing=5
+alert_humidity_max_warning=80
+alert_humidity_max_firing=90
+alert_humidity_min_warning=20
+alert_humidity_min_firing=10
+alert_pressure_max_warning=1020
+alert_pressure_max_firing=1050
+alert_pressure_min_warning=980
+alert_pressure_min_firing=950
+alert_ppm_max_warning=4
+alert_ppm_max_firing=10
+alert_loudless_max_warning=400
+alert_loudless_max_firing=600

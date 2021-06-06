@@ -6,7 +6,10 @@ volumes:
 
 services:
   grovepi_exporter:
-    env_file: envs/grovepi
+    env_file: 
+      - envs/global
+      - envs/grovepi
+      - envs/alerts_threshold
     container_name: grovepi_exporter
     privileged: true
     stdin_open: true
@@ -68,7 +71,7 @@ services:
       - alertmanager
   
   alertmanager:
-    image: prom/alertmanager:v0.21.0
+    image: prom/alertmanager:v0.22.2
     container_name: alertmanager
     env_file: 
       - envs/global
@@ -82,7 +85,7 @@ services:
       - prometheus
 
   prometheus:
-    image: prom/prometheus:v2.26.0
+    image: prom/prometheus:v2.27.1
     container_name: prometheus
     user: root
     env_file: 
@@ -98,7 +101,7 @@ services:
       #- '--enable-feature=expand-external-labels'
 
   grafana:
-    image: grafana/grafana:7.5.4
+    image: grafana/grafana:7.5.7
     container_name: grafana
     env_file: 
       - envs/global

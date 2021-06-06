@@ -2,7 +2,7 @@ global:
   scrape_interval:     60s
   evaluation_interval: 60s
 #  external_labels:
-#    - "localization_name" : "$localization_name"
+#    localization_name : "$localization_name"
 scrape_configs:
   - job_name: 'prometheus'
     honor_labels: true
@@ -19,7 +19,7 @@ scrape_configs:
       - targets: ['node_exporter:9100']
 
 rule_files:
-    - "alerts/grove_dht.rules"
+    - "alerts/*.rules"
 
 alerting:
   alertmanagers:
