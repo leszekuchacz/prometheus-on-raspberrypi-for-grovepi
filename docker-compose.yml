@@ -98,7 +98,7 @@ services:
     command:
       - '--storage.tsdb.path=/data'
       - '--config.file=/etc/prometheus/prometheus.yml'
-      #- '--enable-feature=expand-external-labels'
+      - '--enable-feature=expand-external-labels'
 
   grafana:
     image: grafana/grafana:7.5.7
