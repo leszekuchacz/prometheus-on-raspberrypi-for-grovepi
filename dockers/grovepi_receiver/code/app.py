@@ -38,7 +38,7 @@ def notify_lcd_rgb(text,severity):
     if severity == "firing":
       setRGB(255,0,0)
     elif severity == "warning":
-      setRGB(255,255,0)
+      setRGB(240,180,0)
     elif severity == "resolved":
       setRGB(0,255,0)
     else:
