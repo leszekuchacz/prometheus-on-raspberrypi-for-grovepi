@@ -1,7 +1,10 @@
 from grove_rgb_lcd import *
 from wsgiref.simple_server import make_server
 import falcon,json,os,time,grovepi
+from filelock import Timeout, FileLock
 
+# grovepi envs
+grovepi_lock_file_path=str("/code/var/"+os.environ.get('grovepi_lock_file_name','grovepi.lock'))
 grovepi_rgb_lcd=os.environ.get('grovepi_rgb_lcd','false')
 grovepi_buzzer_dport=int(os.environ.get('grovepi_buzzer_dport','-1'))
 grovepi_led_red_dport=int(os.environ.get('grovepi_led_red_dport','-1'))
@@ -50,18 +53,22 @@ def notify_lcd_rgb(text,severity):
 # Falcon
 class WebhookResource:
   def on_post(self,req,resp):
-    data = req.get_media()
-    print("group_status: "+data['status'])
-    for a in data['alerts']:
-      print("  alert_status: "+a['status']+" alertname: "+a['labels']['alertname']+" severity: "+a['labels']['severity']+" desc: "+a['annotations']['description'])
+    lock = FileLock(grovepi_lock_file_path,timeout=10)
+    with lock:
+      lock.acquire()
+      data = req.get_media()
+      print("group_status: "+data['status'])
+      for a in data['alerts']:
+        print("  alert_status: "+a['status']+" alertname: "+a['labels']['alertname']+" severity: "+a['labels']['severity']+" desc: "+a['annotations']['description'])
 
-      output=a['labels']['severity']+": "+a['labels']['alertname']
-      if grovepi_buzzer_dport >= 0:
-        notify_buzzer(0.1)  
-      if grovepi_led_red_dport >= 0:
-        notify_led(a['labels']['severity'])
-      if grovepi_rgb_lcd == "true":
-        notify_lcd_rgb(output,a['labels']['severity'])
+        output=a['labels']['severity']+": "+a['labels']['alertname']
+        if grovepi_buzzer_dport >= 0:
+          notify_buzzer(0.1)  
+        if grovepi_led_red_dport >= 0:
+          notify_led(a['labels']['severity'])
+        if grovepi_rgb_lcd == "true":
+          notify_lcd_rgb(output,a['labels']['severity'])
+      lock.release()      
     resp.status = falcon.HTTP_200
 
 app = falcon.App()

@@ -1,3 +1,5 @@
+grovepi_lock_file_name=grovepi.lock
+
 grovepi_exporter_port=8081
 
 grovepi_dht_dport=7

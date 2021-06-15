@@ -1,1 +1,2 @@
-prometheus_client
+prometheus_client==0.10.1
+filelock==3.0.12

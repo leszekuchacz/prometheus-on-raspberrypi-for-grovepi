@@ -3,6 +3,7 @@ version: '3.0'
 volumes:
   vol_prometheus: {}
   vol_grafana: {}
+  vol_grovepi_var: {}
 
 services:
   grovepi_exporter:
@@ -24,6 +25,7 @@ services:
     volumes:
         - /dev/i2c-1:/dev/i2c-1
         - ./dockers/grovepi_exporter/code:/code
+        - vol_grovepi_var:/code/var
     devices:
         - /dev/i2c-1:/dev/i2c-1
     depends_on:
@@ -65,6 +67,7 @@ services:
     volumes:
         - /dev/i2c-1:/dev/i2c-1
         - ./dockers/grovepi_receiver/code:/code
+        - vol_grovepi_var:/code/var
     devices:
         - /dev/i2c-1:/dev/i2c-1
     depends_on:
