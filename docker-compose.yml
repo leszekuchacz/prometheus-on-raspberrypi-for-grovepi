@@ -30,6 +30,25 @@ services:
         - /dev/i2c-1:/dev/i2c-1
     depends_on:
       - prometheus
+  grovepi_input:
+    env_file: 
+      - envs/global
+      - envs/grovepi
+      - envs/alerts_threshold
+    container_name: grovepi_input
+    privileged: true
+    stdin_open: true
+    tty: true
+    command: "python /code/app.py"
+    image: grovepi_exporter:latest
+    volumes:
+        - /dev/i2c-1:/dev/i2c-1
+        - ./dockers/grovepi_input/code:/code
+        - vol_grovepi_var:/code/var
+    devices:
+        - /dev/i2c-1:/dev/i2c-1
+    depends_on:
+      - grovepi_exporter
 
   node_exporter:
     image: quay.io/prometheus/node-exporter:v1.1.2
@@ -88,7 +107,7 @@ services:
       - prometheus
 
   prometheus:
-    image: prom/prometheus:v2.27.1
+    image: prom/prometheus:v2.28.1
     container_name: prometheus
     user: root
     env_file: 
