@@ -30,6 +30,8 @@ services:
         - /dev/i2c-1:/dev/i2c-1
     depends_on:
       - prometheus
+    restart: always
+
   grovepi_input:
     env_file: 
       - envs/global
@@ -49,6 +51,7 @@ services:
         - /dev/i2c-1:/dev/i2c-1
     depends_on:
       - grovepi_exporter
+    restart: always
 
   node_exporter:
     image: quay.io/prometheus/node-exporter:v1.1.2
@@ -67,6 +70,7 @@ services:
       - "9100:9100"
     depends_on:
       - prometheus
+    restart: always
 
   grovepi_receiver:
     image: grovepi_receiver:latest
@@ -91,6 +95,7 @@ services:
         - /dev/i2c-1:/dev/i2c-1
     depends_on:
       - alertmanager
+    restart: always
   
   alertmanager:
     image: prom/alertmanager:v0.22.2
@@ -105,6 +110,7 @@ services:
       - '--config.file=/etc/alertmanager/config.yml'
     depends_on:
       - prometheus
+    restart: always
 
   prometheus:
     image: prom/prometheus:v2.28.1
@@ -121,6 +127,7 @@ services:
       - '--storage.tsdb.path=/data'
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--enable-feature=expand-external-labels'
+    restart: always
 
   grafana:
     image: grafana/grafana:7.5.7
@@ -135,4 +142,5 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
+    restart: always
 
