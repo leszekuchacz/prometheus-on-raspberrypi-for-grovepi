@@ -1,3 +1,5 @@
+grovepi_lock_file_name=grovepi.lock
+
 grovepi_exporter_port=8081
 
 grovepi_dht_dport=7
@@ -17,3 +19,5 @@ grovepi_buzzer_dport=8
 grovepi_barometer_type=bme280
 
 grovepi_led_red_dport=5
+
+grovepi_button_dport=3

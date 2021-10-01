@@ -1,13 +1,13 @@
 curl -XPOST -H "Content-Type: application/json"  localhost:8082/webhook -d "$(cat <<EOF
 {
   "receiver": "grovepi_reciver",
-  "status": "firing",
+  "status": "warning",
   "alerts": [{
-    "status": "firing",
+    "status": "warning",
     "labels": {
       "alertname": "grovepi_dht_sensor",
       "instance": "grovepi_receiver",
-      "severity": "firing"
+      "severity": "warning"
     },
     "annotations": {
       "summary": "Temp is over 25 C",

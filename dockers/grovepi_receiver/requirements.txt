@@ -1,1 +1,2 @@
-falcon
+falcon==3.0.0
+filelock==3.0.12

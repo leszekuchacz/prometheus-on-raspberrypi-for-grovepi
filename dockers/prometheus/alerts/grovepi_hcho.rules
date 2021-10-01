@@ -1,0 +1,17 @@
+groups:
+  - name: grovepi_hcho_sensor
+    rules:
+    - alert: ppm_max_warn
+      expr: grovepi_hcho_ppm  > alert_ppm_max_warning
+      for: 10m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Ppm is over {{  $labels.alert_ppm_max_warning }}"
+    - alert: ppm_max_firing
+      expr: grovepi_hcho_ppm > alert_ppm_max_firing
+      for: 2m
+      labels:
+        severity: firing
+      annotations:
+        summary: "Ppm is over {{  $labels.alert_ppm_max_firing }}"
