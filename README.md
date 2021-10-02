@@ -29,7 +29,7 @@ A stack of monitoring solutions for Raspberrypi orchestrated by `docker-compose`
 | buzzer | 107020000 Piezo Buzzer/Active Buzzer | https://wiki.seeedstudio.com/Grove-Buzzer/ | $2.10 | D8 |
 | barometer | 101020193 bme280 | https://wiki.seeedstudio.com/Grove-Barometer_Sensor-BME280/ | $18.70 |i2c-3 |
 | led red | 104030005 | https://wiki.seeedstudio.com/Grove-Red_LED/ | $2.10 | D5 |
-| Button | 104030005 | https://seeeddoc.github.io/Grove-Button/ | $2.10 | D3 |
+| Button | 101020003 | https://seeeddoc.github.io/Grove-Button/ | $2.10 | D3 |
 
 ![Host](https://raw.githubusercontent.com/leszekuchacz/prometheus-on-raspberrypi-for-grovepi/develop/docs/connections_v0.3.0.jpg)
 
