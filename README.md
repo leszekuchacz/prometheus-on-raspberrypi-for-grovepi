@@ -5,10 +5,12 @@ A stack of monitoring solutions for Raspberrypi orchestrated by `docker-compose`
 # Stack overview
 + **groviepi_reciever** - http endpoint for alertmanager, gives avaiablity to push alerts from alertmanager to lcd or buzzier. 
 + **groviepi_exporter** - http endpoint for prometheus, gives availability to scrape groviepi sensor metrics. 
++ **groviepi_input**    - Reads the change of button, gives availability to define action under push button( ex. show temp on lcd).
 + **node_exporter**     - http endpoint for prometheus, gives availability to scrape host metrcis(cpu,mem).
 + **prometheus**        - monitoring tool, database for grafana. 
 + **grafana**           - visualizations of scraped metrics. 
 + **alertmanager**      - push alerts from promethesus to defined targets(groviepi_reciever).
+
 
 
 # Install(fast and default)
@@ -27,8 +29,9 @@ A stack of monitoring solutions for Raspberrypi orchestrated by `docker-compose`
 | buzzer | 107020000 Piezo Buzzer/Active Buzzer | https://wiki.seeedstudio.com/Grove-Buzzer/ | $2.10 | D8 |
 | barometer | 101020193 bme280 | https://wiki.seeedstudio.com/Grove-Barometer_Sensor-BME280/ | $18.70 |i2c-3 |
 | led red | 104030005 | https://wiki.seeedstudio.com/Grove-Red_LED/ | $2.10 | D5 |
+| Button | 104030005 | https://seeeddoc.github.io/Grove-Button/ | $2.10 | D3 |
 
-![Host](https://raw.githubusercontent.com/leszekuchacz/prometheus-on-raspberrypi-for-grovepi/develop/docs/connections.jpg)
+![Host](https://raw.githubusercontent.com/leszekuchacz/prometheus-on-raspberrypi-for-grovepi/develop/docs/connections_v0.3.0.jpg)
 
 3. Login on root, run bellow command and reboot.
 ```
@@ -70,3 +73,5 @@ docker-composer up -d
 | http://localhost:9090 | prometheus      |
 | http://localhost:3000 | grafana         |
 
+![Host](https://raw.githubusercontent.com/leszekuchacz/prometheus-on-raspberrypi-for-grovepi/develop/docs/grafana_v0.3.0.png)
+![Host](https://raw.githubusercontent.com/leszekuchacz/prometheus-on-raspberrypi-for-grovepi/develop/docs/prometheus_v0.3.0.png)
