@@ -1,4 +1,4 @@
-FROM python:3.7
+FROM python:3.8
 
 RUN apt-get update && apt-get install --no-install-recommends -y i2c-tools libi2c-dev libncurses5 libffi-dev gcc git 
 RUN git clone https://github.com/DexterInd/RFR_Tools.git && cd RFR_Tools/miscellaneous/ && python3 setup.py install

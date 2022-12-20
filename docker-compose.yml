@@ -54,7 +54,7 @@ services:
     restart: always
 
   node_exporter:
-    image: quay.io/prometheus/node-exporter:v1.1.2
+    image: quay.io/prometheus/node-exporter:v1.5.0
     container_name: node_exporter
     volumes:
       - /proc:/host/proc:ro
@@ -98,7 +98,7 @@ services:
     restart: always
   
   alertmanager:
-    image: prom/alertmanager:v0.22.2
+    image: prom/alertmanager:v0.24.0
     container_name: alertmanager
     env_file: 
       - envs/global
@@ -113,7 +113,7 @@ services:
     restart: always
 
   prometheus:
-    image: prom/prometheus:v2.28.1
+    image: prom/prometheus:v2.40.7
     container_name: prometheus
     user: root
     env_file: 
@@ -130,7 +130,7 @@ services:
     restart: always
 
   grafana:
-    image: grafana/grafana:7.5.7
+    image: grafana/grafana:9.3.1
     container_name: grafana
     env_file: 
       - envs/global
