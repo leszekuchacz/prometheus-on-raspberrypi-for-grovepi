@@ -1,4 +1,4 @@
-version: '3.0'
+version: '3.8'
 
 volumes:
   vol_prometheus: {}
@@ -6,6 +6,23 @@ volumes:
   vol_grovepi_var: {}
 
 services:
+  prometheus:
+    image: prom/prometheus:v2.40.7
+    container_name: prometheus
+    user: root
+    env_file: 
+      - envs/global
+    volumes:
+      - ./dockers/prometheus:/etc/prometheus/
+      - vol_prometheus:/data
+    ports:
+      - "9090:9090"
+    command:
+      - '--storage.tsdb.path=/data'
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--enable-feature=expand-external-labels'
+    restart: always
+
   grovepi_exporter:
     env_file: 
       - envs/global
@@ -52,24 +69,20 @@ services:
     depends_on:
       - grovepi_exporter
     restart: always
-
-  node_exporter:
-    image: quay.io/prometheus/node-exporter:v1.5.0
-    container_name: node_exporter
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    command:
-      - '--path.procfs=/host/proc'
-      - '--path.rootfs=/rootfs'
-      - '--path.sysfs=/host/sys'
-      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
-    restart: unless-stopped
+  
+  alertmanager:
+    image: prom/alertmanager:v0.24.0
+    container_name: alertmanager
+    env_file: 
+      - envs/global
     ports: 
-      - "9100:9100"
+      - "9093:9093"
+    volumes:
+      - ./dockers/alertmanager:/etc/alertmanager/
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
     depends_on:
-      - prometheus
+      - grovepi_input
     restart: always
 
   grovepi_receiver:
@@ -96,37 +109,24 @@ services:
     depends_on:
       - alertmanager
     restart: always
-  
-  alertmanager:
-    image: prom/alertmanager:v0.24.0
-    container_name: alertmanager
-    env_file: 
-      - envs/global
-    ports: 
-      - "9093:9093"
-    volumes:
-      - ./dockers/alertmanager:/etc/alertmanager/
-    command:
-      - '--config.file=/etc/alertmanager/config.yml'
-    depends_on:
-      - prometheus
-    restart: always
 
-  prometheus:
-    image: prom/prometheus:v2.40.7
-    container_name: prometheus
-    user: root
-    env_file: 
-      - envs/global
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:v1.5.0
+    container_name: node_exporter
     volumes:
-      - ./dockers/prometheus:/etc/prometheus/
-      - vol_prometheus:/data
-    ports:
-      - "9090:9090"
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
     command:
-      - '--storage.tsdb.path=/data'
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--enable-feature=expand-external-labels'
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    restart: unless-stopped
+    ports: 
+      - "9100:9100"
+    depends_on:
+      - grovepi_receiver
     restart: always
 
   grafana:
@@ -141,6 +141,6 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - prometheus
+      - node_exporter
     restart: always
 
