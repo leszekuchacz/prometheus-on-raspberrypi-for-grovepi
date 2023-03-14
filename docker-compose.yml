@@ -108,6 +108,7 @@ services:
         - /dev/i2c-1:/dev/i2c-1
     depends_on:
       - alertmanager
+      - grovepi_exporter
     restart: always
 
   node_exporter:
