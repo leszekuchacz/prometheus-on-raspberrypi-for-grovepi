@@ -1,0 +1,119 @@
+groups:
+  - name: bmi688_exporter
+    rules:
+    - alert: temperature_max_warn
+      expr: bmi688_temperature  > ignoring(instance,job) alert_temperature_max_warning
+      for: 15m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Temperature is over {{  $labels.alert_temperature_max_warning }} C"
+        description: "Open window"
+    - alert: temperature_max_firing
+      expr: bmi688_temperature > ignoring(instance,job) alert_temperature_max_firing
+      for: 5m
+      labels:
+        severity: firing
+      annotations:
+        summary: "Temperature is over {{  $labels.alert_temperature_max_firing }} C"
+        description: "Turn on the air conditioning"
+    - alert: temperature_min_warn
+      expr: bmi688_temperature  < ignoring(instance,job) alert_temperature_min_warning
+      for: 15m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Temperature is above {{  $labels.alert_temperature_min_warning }} C"
+    - alert: temperature_min_firing
+      expr: bmi688_temperature < ignoring(instance,job) alert_temperature_min_firing
+      for: 5m
+      labels:
+        severity: firing
+      annotations:
+        summary: "Temperature is above {{  $labels.alert_temperature_min_firing }} C"
+    
+    - alert: humidity_max_warn
+      expr: bmi688_humidity  >  ignoring(instance,job) alert_humidity_max_warning
+      for: 15m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Humidity is over {{  $labels.alert_humidity_max_warning }}"
+    - alert: humidity_max_firing
+      expr: bmi688_humidity > ignoring(instance,job) alert_humidity_max_firing
+      for: 5m
+      labels:
+        severity: firing
+      annotations:
+        summary: "Humidity is over {{  $labels.alert_humidity_max_firing }}"
+    - alert: humidity_min_warn
+      expr: bmi688_humidity  <  ignoring(instance,job) alert_humidity_min_warning
+      for: 15m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Humidity is above {{  $labels.alert_humidity_min_warning }}"
+    - alert: humidity_min_firing
+      expr: bmi688_humidity < ignoring(instance,job) alert_humidity_min_firing
+      for: 5m
+      labels:
+        severity: firing
+      annotations:
+        summary: "Humidity is above {{  $labels.alert_humidity_min_firing }}"
+
+    - alert: pressure_max_warn
+      expr: (bmi688_pressure/100)  >  ignoring(instance,job) alert_pressure_max_warning
+      for: 15m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Pressure is over {{  $labels.alert_pressure_max_warning }}"
+    - alert: pressure_max_firing
+      expr: (bmi688_pressure/100) > ignoring(instance,job) alert_pressure_max_firing
+      for: 5m
+      labels:
+        severity: firing
+      annotations:
+        summary: "Pressure is over {{  $labels.alert_pressure_max_firing }}"
+    - alert: pressure_min_warn
+      expr: (bmi688_pressure/100)  <  ignoring(instance,job) alert_pressure_min_warning
+      for: 15m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Pressure is above {{  $labels.alert_pressure_min_warning }}"
+    - alert: pressure_min_firing
+      expr: (bmi688_pressure/100)  < ignoring(instance,job) alert_pressure_min_firing
+      for: 5m
+      labels:
+        severity: firing
+      annotations:
+        summary: "Pressure is above {{  $labels.alert_pressure_min_firing }}"
+    - alert: air_quality_score_max_warn
+      expr:  bmi688_airqualityscore > 50
+      for: 15m
+      labels:
+        severity: warning
+      annotations:
+        summary: "AQS is over 50"
+    - alert: air_quality_score_max_firing
+      expr:  bmi688_airqualityscore > 100
+      for: 5m
+      labels:
+        severity: firing
+      annotations:
+        summary: "AQS is over 100"
+    - alert: eco2_max_warn
+      expr:  bmi688_eco2 > 600
+      for: 15m
+      labels:
+        severity: warning
+      annotations:
+        summary: "eCo2 is over 600 ppm"
+    - alert: eco2_max_firing
+      expr:  bmi688_eco2 > 1000
+      for: 5m
+      labels:
+        severity: firing
+      annotations:
+        summary: "eCo2 is over 1000 ppm"

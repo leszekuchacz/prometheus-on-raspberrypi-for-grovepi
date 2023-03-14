@@ -1,0 +1,32 @@
+groups:
+  - name: prometheus
+    rules:
+    - alert: prometheus_target_missing_warn
+      expr: up == 0
+      for: 15m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Prometheus target missing for 15 minutes (instance {{ $labels.instance }})"
+    - alert: prometheus_target_missing_crit
+      expr: up == 0
+      for: 60m
+      labels:
+        severity: firing
+      annotations:
+        summary: "Prometheus target missing for 60 minutes (instance {{ $labels.instance }})"
+    - alert: prometheus_rule_evaluation_failures
+      expr: increase(prometheus_rule_evaluation_failures_total[60m]) > 0
+      for: 60m
+      labels:
+        severity: firing
+      annotations:
+        summary: "Prometheus rule evaluation failures (instance {{ $labels.instance }})"
+    - alert: prometheus_alertmanager_notification_failing
+      expr: rate(alertmanager_notifications_failed_total[15m]) > 0
+      for: 60m
+      labels:
+        severity: firing
+      annotations:
+        summary: "Prometheus AlertManager notification failing (instance {{ $labels.instance }})"
+    

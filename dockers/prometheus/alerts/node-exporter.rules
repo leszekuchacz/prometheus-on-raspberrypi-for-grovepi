@@ -1,0 +1,25 @@
+groups:
+  - name: node-exporter
+    rules:
+    - alert: host_high_cpu_load_crit
+      expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[15m])) * 100) > 90
+      for: 15m
+      labels:
+        severity: firing
+      annotations:
+        summary: "Host high CPU load (instance {{ $labels.instance }})"
+        description: "CPU load is > 90%  Value =  {{ $value }}\n"
+    - alert: host_disk_out_of_space_crit
+      expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) * 100 < 5 and ON (instance, device, mountpoint) node_filesystem_readonly == 0
+      for: 5m
+      labels:
+        severity: firing
+      annotations:
+        summary: "Host out of disk space (instance {{ $labels.instance }})"
+    - alert: host_disk_out_of_space_warn
+      expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) * 100 < 20 and ON (instance, device, mountpoint) node_filesystem_readonly == 0
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Host out of disk space (instance {{ $labels.instance }})"
