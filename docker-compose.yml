@@ -6,22 +6,19 @@ volumes:
   vol_grovepi_var: {}
 
 services:
-  prometheus:
-    image: prom/prometheus:v2.40.7
-    container_name: prometheus
-    user: root
-    env_file: 
-      - envs/global
+  bootstrap:
+    image: alpine:3.17.3
+    container_name: bootstrap
+    command: 
+      - /bin/sh
+      - -c 
+      - |
+        /bin/echo "Starting bootstrap (one time job at start)"
+        /bin/rm -f /code/var/grovepi.lock
+        /bin/echo "Done"
     volumes:
-      - ./dockers/prometheus:/etc/prometheus/
-      - vol_prometheus:/data
-    ports:
-      - "9090:9090"
-    command:
-      - '--storage.tsdb.path=/data'
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--enable-feature=expand-external-labels'
-    restart: always
+      - vol_grovepi_var:/code/var
+    restart: "no"
 
   grovepi_exporter:
     env_file: 
@@ -46,7 +43,7 @@ services:
     devices:
         - /dev/i2c-1:/dev/i2c-1
     depends_on:
-      - prometheus
+      - 'bootstrap'
     restart: always
 
   grovepi_input:
@@ -70,20 +67,6 @@ services:
       - grovepi_exporter
     restart: always
   
-  alertmanager:
-    image: prom/alertmanager:v0.24.0
-    container_name: alertmanager
-    env_file: 
-      - envs/global
-    ports: 
-      - "9093:9093"
-    volumes:
-      - ./dockers/alertmanager:/etc/alertmanager/
-    command:
-      - '--config.file=/etc/alertmanager/config.yml'
-    depends_on:
-      - grovepi_input
-    restart: always
 
   grovepi_receiver:
     image: grovepi_receiver:latest
@@ -107,8 +90,43 @@ services:
     devices:
         - /dev/i2c-1:/dev/i2c-1
     depends_on:
-      - alertmanager
-      - grovepi_exporter
+      - grovepi_input
+    restart: always
+
+  prometheus:
+    image: prom/prometheus:v2.40.7
+    container_name: prometheus
+    user: root
+    env_file: 
+      - envs/global
+    volumes:
+      - ./dockers/prometheus:/etc/prometheus/
+      - vol_prometheus:/data
+    ports:
+      - "9090:9090"
+    command:
+      - '--storage.tsdb.path=/data'
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--log.level=error'
+      - '--enable-feature=expand-external-labels'
+    restart: always
+    depends_on:
+      - grovepi_receiver
+  
+  alertmanager:
+    image: prom/alertmanager:v0.24.0
+    container_name: alertmanager
+    env_file: 
+      - envs/global
+    ports: 
+      - "9093:9093"
+    volumes:
+      - ./dockers/alertmanager:/etc/alertmanager/
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--log.level=error'
+    depends_on:
+      - prometheus
     restart: always
 
   node_exporter:
@@ -123,18 +141,21 @@ services:
       - '--path.rootfs=/rootfs'
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+      - '--log.level=error'
     restart: unless-stopped
     ports: 
       - "9100:9100"
-    depends_on:
-      - grovepi_receiver
     restart: always
+    depends_on:
+      - alertmanager
 
   grafana:
-    image: grafana/grafana:9.3.1
+    image: grafana/grafana:9.4.7
     container_name: grafana
     env_file: 
       - envs/global
+    environment:
+      - "GF_LOG_LEVEL=error"
     volumes:
       - vol_grafana:/var/lib/grafana
       - ./dockers/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
